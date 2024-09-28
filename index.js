@@ -1,14 +1,20 @@
 const express = require("express")//para usar o express
 const server = express ()//para criar um servidor
+const alunos = require("./src/teste.json")
 
 server.get("/", (req, res)=>{
     return res.json({mensagem:"Hello NODE"})
 })
 
 server.get("/msg", (req, res)=>{
-    return res.json({mensagem:"Olá!"})
+    return res.json({mensagem:"Olá!!"})
+})
+
+server.get("/alunos", (req, res)=>{
+    return res.json(alunos)
 })
 
 server.listen(3300, ()=>{
     console.log('server ON')
 })
+
