@@ -104,9 +104,20 @@ rotas.get("/mostrar_igrediente", async function (req, res) {
     res.json(igredientes); //Retorna os registros em formato JSON
 });
 
-rotas.get("/mostrar_usuario", async function (req, res) {
+/*rotas.get("/mostrar_usuario", async function (req, res) {
     const usuario = await Usuario.findAll(); //Busca todos os registros
     res.json(usuario); //Retorna os registros em formato JSON
+});
+*/
+
+//Exibir informações do usuário com tratativas de erro
+rotas.get("/mostrar_usuario", async function (req, res) {
+  try {
+      const usuario = await Usuario.findAll(); // Busca todos os registros
+      res.json(usuario); // Retorna os registros em formato JSON
+  } catch (error) {
+      res.status(500).json({ message: `Erro ao buscar usuário: ${error}` }); // Retorna erro ao cliente
+  }
 });
 
 //Deletar informações pelo o ID
@@ -141,7 +152,7 @@ rotas.get("/deletar_igredientes/:id", async function (req, res) {
     }
 });
 
-rotas.get("/deletar_usuario/:id", async function (req, res) {
+/*rotas.get("/deletar_usuario/:id", async function (req, res) {
     const { id } = req.params;
     const idNumber = parseInt(id, 10); //Converte id para número
 
@@ -154,8 +165,28 @@ rotas.get("/deletar_usuario/:id", async function (req, res) {
     } else {
         res.status(404).json({ mensagem: "Usuário não encontrado!" });
     }
-});
+});*/
 
+//Deletar informações do usuário com tratativas de erro
+
+rotas.get("/deletar_usuario/:id", async function (req, res) {
+  try{
+    const { id } = req.params;
+    const idNumber = parseInt(id, 10); //Converte id para número
+
+    const deleted = await Usuario.destroy({
+        where: { id: idNumber},
+    });
+
+    if (deleted) {
+        res.json({ mensagem: "Usuário deletado com sucesso!" });
+    } else {
+        res.status(404).json({ mensagem: "Usuário não encontrado!" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: `Erro ao deletar usuário: ${error}` }); // Retorna erro ao cliente
+  }
+});
 //Fazer updates via ID
 
 rotas.get("/editar_receita/:id/:nome/:tempoPreparo/:modoPreparo/:descricao", async function (req, res) {
@@ -190,7 +221,7 @@ rotas.get("/editar_igredientes/:id/:nome/:quantidade/:unidadeMedida", async func
   });
 });
 
-rotas.get("/editar_usuario/:id/:nome/:email/:senha", async function (req, res) {
+/*rotas.get("/editar_usuario/:id/:nome/:email/:senha", async function (req, res) {
   const { id, nome, email, senha } = req.params;
   const idNumber = parseInt(id, 10); // Converte o ID para número
 
@@ -204,8 +235,29 @@ rotas.get("/editar_usuario/:id/:nome/:email/:senha", async function (req, res) {
   res.json({
     mensagem: "Usuário atualizado com sucesso!",
   });
-});
+});*/
 
+//Editar informações do usuário com tratativas de erro
+
+rotas.get("/editar_usuario/:id/:nome/:email/:senha", async function (req, res) {
+  try{
+    const { id, nome, email, senha } = req.params;
+    const idNumber = parseInt(id, 10); // Converte o ID para número
+
+    const [updated] = await Usuario.update(
+      { nome, email, senha },
+      {
+        where: { id: idNumber }, // Usa o ID numérico
+      }
+    );
+
+    res.json({
+      mensagem: "Usuário atualizado com sucesso!",
+    });
+  } catch (error) {
+    res.status(500).json({ message: `Erro ao editar usuário: ${error}` }); // Retorna erro ao cliente
+  }
+});
 /*Servidor*/
 
 rotas.listen(3031, function () {
