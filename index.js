@@ -17,15 +17,15 @@ const conexaoComBanco = new Sequelize("receitas", "root", "", {
     res.send("Aplicativo de Receitas");
   });
 
-  app.get("/Receita/:nome/:tempoPreparo/:modoPreparo/:descricao", function (req, res) {
+  app.get("/receita/:nome/:tempoPreparo/:modoPreparo/:descricao", function (req, res) {
       res.send(req.params);
   });
 
-  app.get("/Igredientes/:nome/:quantidade/:unidadeMedida", function (req, res) {
+  app.get("/igredientes/:nome/:quantidade/:unidadeMedida", function (req, res) {
     res.send(req.params);
   });
 
-  app.get("/Usuario/:nome/:email/:senha", function (req, res) {
+  app.get("/usuario/:nome/:email/:senha", function (req, res) {
     res.send(req.params);
   });
 

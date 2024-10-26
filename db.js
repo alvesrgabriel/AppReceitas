@@ -51,7 +51,7 @@ const Usuario = conexaoComBanco.define("Usuario", {
 //INSERT
 Receita.create({
   nome: "Bolo de cenoura",
-  tempoPreparo: "40:00",
+  tempoPreparo: "00:40:00",
   modoPreparo: "Misture os ingredientes e asse por 30 minutos",
   descricao: "Um bolo saboroso feito com cenouras frescas.",
 });
