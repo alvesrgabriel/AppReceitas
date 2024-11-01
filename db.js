@@ -20,7 +20,7 @@ const Receita = conexaoComBanco.define("Receita", {
       type: Sequelize.TEXT,
     },
 });
-const Igredientes = conexaoComBanco.define("Igredientes", {
+const Ingredientes = conexaoComBanco.define("Ingredientes", {
   nome: {
     type: Sequelize.STRING,
   },
@@ -55,7 +55,7 @@ Receita.create({
   modoPreparo: "Misture os ingredientes e asse por 30 minutos",
   descricao: "Um bolo saboroso feito com cenouras frescas.",
 });
-Igredientes.create({
+Ingredientes.create({
   nome: "Cenoura",
   quantidade: "2",
   unidadeMedida: "unidades",

@@ -1,6 +1,8 @@
 const express = require("express");
 const rotas = express();
 const Sequelize = require("sequelize");
+const cors = require("cors");
+rotas.use(cors());
 
 /*Banco de dados*/
 const conexaoBanco = new Sequelize("receitas", "root", "", {
@@ -24,7 +26,7 @@ const Receita = conexaoBanco.define("Receita", {
       type: Sequelize.TEXT,
     },
 });
-const Igredientes = conexaoBanco.define("Igredientes", {
+const Ingredientes = conexaoBanco.define("Ingredientes", {
   nome: {
     type: Sequelize.STRING,
   },
@@ -47,12 +49,13 @@ const Usuario = conexaoBanco.define("Usuario", {
     type: Sequelize.STRING,
   },
 });
-/*Aqui é pra rodar quando criar a coluna
+//Aqui é pra rodar quando criar a coluna
 
 //Receita.sync({ force: true });
-//Igredientes.sync({ force: true });
+//Ingredientes.sync({ force: true });
 //Usuario.sync({ force: true });
 
+/*
 -------------------------------------
 ---ROTAS---
 */
@@ -71,14 +74,14 @@ rotas.get("/receita/:nome/:tempoPreparo/:modoPreparo/:descricao", async function
         receita: novaReceita,
     });
 });
-rotas.get("/igredientes/:nome/:quantidade/:unidadeMedida", async function (req, res) {
+rotas.get("/ingredientes/:nome/:quantidade/:unidadeMedida", async function (req, res) {
     const { nome, quantidade, unidadeMedida } = req.params;
 
-    const novoIgrediente = await Igredientes.create({ nome, quantidade, unidadeMedida });
+    const novoIngrediente = await Ingredientes.create({ nome, quantidade, unidadeMedida });
 
     res.json({
-        resposta: "Igredientes adicionados com sucesso!",
-        igredientes: novoIgrediente,
+        resposta: "Ingredientes adicionados com sucesso!",
+        igredientes: novoIngrediente,
     });
   });
 rotas.get("/usuario/:nome/:email/:senha", async function (req, res) {
@@ -99,9 +102,9 @@ rotas.get("/mostrar_receita", async function (req, res) {
     res.json(receita); //Retorna os registros em formato JSON
 });
 
-rotas.get("/mostrar_igrediente", async function (req, res) {
-    const igredientes = await Igredientes.findAll(); //Busca todos os registros
-    res.json(igredientes); //Retorna os registros em formato JSON
+rotas.get("/mostrar_ingredientes", async function (req, res) {
+    const ingredientes = await Ingredientes.findAll(); //Busca todos os registros
+    res.json(ingredientes); //Retorna os registros em formato JSON
 });
 
 /*rotas.get("/mostrar_usuario", async function (req, res) {
@@ -137,18 +140,18 @@ rotas.get("/deletar_receita/:id", async function (req, res) {
     }
 });
 
-rotas.get("/deletar_igredientes/:id", async function (req, res) {
+rotas.get("/deletar_ingredientes/:id", async function (req, res) {
     const { id } = req.params;
     const idNumber = parseInt(id, 10); //Converte id para número
 
-    const deleted = await Igredientes.destroy({
+    const deleted = await Ingredientes.destroy({
         where: { id: idNumber},
     });
 
     if (deleted) {
-        res.json({ mensagem: "Igrediente deletado com sucesso!" });
+        res.json({ mensagem: "Ingrediente deletado com sucesso!" });
     } else {
-        res.status(404).json({ mensagem: "Igrediente não encontrado!" });
+        res.status(404).json({ mensagem: "Ingrediente não encontrado!" });
     }
 });
 
@@ -205,11 +208,11 @@ rotas.get("/editar_receita/:id/:nome/:tempoPreparo/:modoPreparo/:descricao", asy
   });
 });
 
-rotas.get("/editar_igredientes/:id/:nome/:quantidade/:unidadeMedida", async function (req, res) {
+rotas.get("/editar_ingredientes/:id/:nome/:quantidade/:unidadeMedida", async function (req, res) {
   const { id, nome, quantidade, unidadeMedida } = req.params;
   const idNumber = parseInt(id, 10); // Converte o ID para número
 
-  const [updated] = await Igredientes.update(
+  const [updated] = await Ingredientes.update(
     { nome, quantidade, unidadeMedida },
     {
       where: { id: idNumber }, // Usa o ID numérico
@@ -217,7 +220,7 @@ rotas.get("/editar_igredientes/:id/:nome/:quantidade/:unidadeMedida", async func
   );
 
   res.json({
-    mensagem: "Igrediente atualizado com sucesso!",
+    mensagem: "Ingrediente atualizado com sucesso!",
   });
 });
 
@@ -258,6 +261,7 @@ rotas.get("/editar_usuario/:id/:nome/:email/:senha", async function (req, res) {
     res.status(500).json({ message: `Erro ao editar usuário: ${error}` }); // Retorna erro ao cliente
   }
 });
+
 /*Servidor*/
 
 rotas.listen(3031, function () {

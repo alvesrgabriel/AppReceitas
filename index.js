@@ -21,7 +21,7 @@ const conexaoComBanco = new Sequelize("receitas", "root", "", {
       res.send(req.params);
   });
 
-  app.get("/igredientes/:nome/:quantidade/:unidadeMedida", function (req, res) {
+  app.get("/ingredientes/:nome/:quantidade/:unidadeMedida", function (req, res) {
     res.send(req.params);
   });
 

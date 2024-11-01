@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receitas</title>
+    <!-- Incluindo Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #495057;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .card-body {
+            background-color: #ffffff;
+        }
+        .card p {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Receitas</h1>
+        <div id="informacoes1" class="card shadow-sm">
+            <div class="card-header">
+                <h5>Receitas</h5>
+            </div>
+            <div class="card-body"></div>
+        </div>
+        <div id="informacoes2" class="card shadow-sm">
+            <div class="card-header">
+                <h5>Ingredientes</h5>
+            </div>
+            <div class="card-body"></div>
+        </div>
+        <div id="informacoes3" class="card shadow-sm">
+            <div class="card-header">
+                <h5>Usuários</h5>
+            </div>
+            <div class="card-body"></div>
+        </div>
+    </div>
+
+    <script>
+        async function receita() {
+            const resposta1 = await fetch("http://localhost:3031/mostrar_receita");
+            const receitas = await resposta1.json();
+
+            const a = document.getElementById("informacoes1").querySelector(".card-body");
+            a.innerHTML = ""; // Limpa o conteúdo anterior
+
+            // Adicionando todas as receitas de uma vez
+            const receitasHTML = receitas.map(receita => `
+                <p><strong>Nome:</strong> ${receita.nome}</p>
+                <p><strong>Tempo de Preparo:</strong> ${receita.tempoPreparo}</p>
+                <p><strong>Modo de Preparo:</strong> ${receita.modoPreparo}</p>
+                <p><strong>Descrição:</strong> ${receita.descricao}</p>
+                <hr>
+            `).join(''); // Junta todos os elementos em uma única string
+
+            a.innerHTML = receitasHTML; // Atualiza o conteúdo de uma vez
+        }
+
+        async function ingredientes() {
+            const resposta2 = await fetch("http://localhost:3031/mostrar_ingredientes");
+            const ingredientes = await resposta2.json();
+
+            const b = document.getElementById("informacoes2").querySelector(".card-body");
+            b.innerHTML = ""; // Limpa o conteúdo anterior
+
+            // Adicionando todos os ingredientes de uma vez
+            const ingredientesHTML = ingredientes.map(ingrediente => `
+                <p><strong>Nome:</strong> ${ingrediente.nome}</p>
+                <p><strong>Quantidade:</strong> ${ingrediente.quantidade}</p>
+                <p><strong>Unidade de Medida:</strong> ${ingrediente.unidadeMedida}</p>
+                <hr>
+            `).join(''); // Junta todos os elementos em uma única string
+
+            b.innerHTML = ingredientesHTML; // Atualiza o conteúdo de uma vez
+        }
+
+        async function usuario() {
+            const resposta3 = await fetch("http://localhost:3031/mostrar_usuario");
+            const usuarios = await resposta3.json();
+            
+            const c = document.getElementById("informacoes3").querySelector(".card-body");
+            c.innerHTML = ""; // Limpa o conteúdo anterior
+            
+            // Adicionando todos os usuários de uma vez
+            const usuariosHTML = usuarios.map(usuario => `
+                <p><strong>Nome:</strong> ${usuario.nome}</p>
+                <p><strong>Email:</strong> ${usuario.email}</p>
+                <p><strong>Senha:</strong> ${usuario.senha}</p>
+                <hr>
+            `).join(''); // Junta todos os elementos em uma única string
+
+            c.innerHTML = usuariosHTML; // Atualiza o conteúdo de uma vez
+        }
+
+        receita();
+        ingredientes();
+        usuario();
+    </script>
+</body>
+</html>
