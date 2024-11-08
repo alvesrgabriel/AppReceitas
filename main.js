@@ -12,7 +12,7 @@ const conexaoBanco = new Sequelize("receitas", "root", "", {
 
 /*Banco de dados
 --create table--*/
-const Receita = conexaoBanco.define("Receita", {
+const receita = conexaoBanco.define("receita", {
     nome: {
       type: Sequelize.STRING,
     },
@@ -26,7 +26,7 @@ const Receita = conexaoBanco.define("Receita", {
       type: Sequelize.TEXT,
     },
 });
-const Ingredientes = conexaoBanco.define("Ingredientes", {
+const ingredientes = conexaoBanco.define("ingredientes", {
   nome: {
     type: Sequelize.STRING,
   },
@@ -38,7 +38,7 @@ const Ingredientes = conexaoBanco.define("Ingredientes", {
   },
   
 });
-const Usuario = conexaoBanco.define("Usuario", {
+const usuario = conexaoBanco.define("usuario", {
   nome: {
     type: Sequelize.STRING,
   },
@@ -51,9 +51,9 @@ const Usuario = conexaoBanco.define("Usuario", {
 });
 //Aqui é pra rodar quando criar a coluna
 
-//Receita.sync({ force: true });
-//Ingredientes.sync({ force: true });
-//Usuario.sync({ force: true });
+//receita.sync({ force: true });
+//ingredientes.sync({ force: true });
+//usuario.sync({ force: true });
 
 /*
 -------------------------------------
@@ -67,7 +67,7 @@ rotas.get("/", function (req, res) {
 rotas.get("/receita/:nome/:tempoPreparo/:modoPreparo/:descricao", async function (req, res) {
     const { nome, tempoPreparo, modoPreparo, descricao } = req.params;
 
-    const novaReceita = await Receita.create({ nome, tempoPreparo, modoPreparo, descricao }); //função que espera
+    const novaReceita = await receita.create({ nome, tempoPreparo, modoPreparo, descricao }); //função que espera
 
     res.json({
         resposta: "Receita adicionada com sucesso!",
@@ -77,17 +77,17 @@ rotas.get("/receita/:nome/:tempoPreparo/:modoPreparo/:descricao", async function
 rotas.get("/ingredientes/:nome/:quantidade/:unidadeMedida", async function (req, res) {
     const { nome, quantidade, unidadeMedida } = req.params;
 
-    const novoIngrediente = await Ingredientes.create({ nome, quantidade, unidadeMedida });
+    const novoIngrediente = await ingredientes.create({ nome, quantidade, unidadeMedida });
 
     res.json({
         resposta: "Ingredientes adicionados com sucesso!",
-        igredientes: novoIngrediente,
+        ingredientes: novoIngrediente,
     });
   });
 rotas.get("/usuario/:nome/:email/:senha", async function (req, res) {
     const { nome, email, senha } = req.params;
 
-    const novoUsuario = await Usuario.create({ nome, email, senha });
+    const novoUsuario = await usuario.create({ nome, email, senha });
 
     res.json({
         resposta: "Usuário cadastrado com sucesso!",
@@ -98,13 +98,13 @@ rotas.get("/usuario/:nome/:email/:senha", async function (req, res) {
 //Exibir todos as informações
 
 rotas.get("/mostrar_receita", async function (req, res) {
-    const receita = await Receita.findAll(); //Busca todos os registros
-    res.json(receita); //Retorna os registros em formato JSON
+    const mostraReceita = await receita.findAll(); //Busca todos os registros
+    res.json(mostraReceita); //Retorna os registros em formato JSON
 });
 
 rotas.get("/mostrar_ingredientes", async function (req, res) {
-    const ingredientes = await Ingredientes.findAll(); //Busca todos os registros
-    res.json(ingredientes); //Retorna os registros em formato JSON
+    const mostrarIngredientes = await ingredientes.findAll(); //Busca todos os registros
+    res.json(mostrarIngredientes); //Retorna os registros em formato JSON
 });
 
 /*rotas.get("/mostrar_usuario", async function (req, res) {
@@ -116,8 +116,8 @@ rotas.get("/mostrar_ingredientes", async function (req, res) {
 //Exibir informações do usuário com tratativas de erro
 rotas.get("/mostrar_usuario", async function (req, res) {
   try {
-      const usuario = await Usuario.findAll(); // Busca todos os registros
-      res.json(usuario); // Retorna os registros em formato JSON
+      const mostrarUsuario = await usuario.findAll(); // Busca todos os registros
+      res.json(mostrarUsuario); // Retorna os registros em formato JSON
   } catch (error) {
       res.status(500).json({ message: `Erro ao buscar usuário: ${error}` }); // Retorna erro ao cliente
   }
@@ -129,7 +129,7 @@ rotas.get("/deletar_receita/:id", async function (req, res) {
     const { id } = req.params;
     const idNumber = parseInt(id, 10); //Converte id para número
 
-    const deleted = await Receita.destroy({
+    const deleted = await receita.destroy({
         where: { id: idNumber},
     });
 
@@ -144,7 +144,7 @@ rotas.get("/deletar_ingredientes/:id", async function (req, res) {
     const { id } = req.params;
     const idNumber = parseInt(id, 10); //Converte id para número
 
-    const deleted = await Ingredientes.destroy({
+    const deleted = await ingredientes.destroy({
         where: { id: idNumber},
     });
 
@@ -177,7 +177,7 @@ rotas.get("/deletar_usuario/:id", async function (req, res) {
     const { id } = req.params;
     const idNumber = parseInt(id, 10); //Converte id para número
 
-    const deleted = await Usuario.destroy({
+    const deleted = await usuario.destroy({
         where: { id: idNumber},
     });
 
@@ -196,7 +196,7 @@ rotas.get("/editar_receita/:id/:nome/:tempoPreparo/:modoPreparo/:descricao", asy
   const { id, nome, tempoPreparo, modoPreparo, descricao } = req.params;
   const idNumber = parseInt(id, 10); // Converte o ID para número
 
-  const [updated] = await Receita.update(
+  const [updated] = await receita.update(
     { nome, tempoPreparo, modoPreparo, descricao },
     {
       where: { id: idNumber }, // Usa o ID numérico
@@ -212,7 +212,7 @@ rotas.get("/editar_ingredientes/:id/:nome/:quantidade/:unidadeMedida", async fun
   const { id, nome, quantidade, unidadeMedida } = req.params;
   const idNumber = parseInt(id, 10); // Converte o ID para número
 
-  const [updated] = await Ingredientes.update(
+  const [updated] = await ingredientes.update(
     { nome, quantidade, unidadeMedida },
     {
       where: { id: idNumber }, // Usa o ID numérico
@@ -247,7 +247,7 @@ rotas.get("/editar_usuario/:id/:nome/:email/:senha", async function (req, res) {
     const { id, nome, email, senha } = req.params;
     const idNumber = parseInt(id, 10); // Converte o ID para número
 
-    const [updated] = await Usuario.update(
+    const [updated] = await usuario.update(
       { nome, email, senha },
       {
         where: { id: idNumber }, // Usa o ID numérico
